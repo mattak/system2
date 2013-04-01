@@ -207,6 +207,8 @@ function animate() {
 # main
 #
 
+trap "showcur; clear; exit" INT
+trap "showcur; clear; exit" TERM
 hidecur
 animate
 showcur
