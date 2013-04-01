@@ -72,6 +72,15 @@ function left() {
     tput cup $pos_h $pos_w
     echon "$msg"
 }
+
+function hidecur() {
+    echon "\x1B[?25l"
+}
+
+function showcur() {
+    echon "\x1B[?25h"
+}
+
  
 function cstr() {
     ESC="\033[0;"
@@ -198,4 +207,6 @@ function animate() {
 # main
 #
  
+hidecur
 animate
+showcur
