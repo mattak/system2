@@ -1,5 +1,5 @@
 #!/bin/sh
- 
+
 ##
 # usage:
 #   question "Are you good?"
@@ -11,7 +11,7 @@ function question() {
     message=$1
     form_message="$message (y/n) "
     answer=0
- 
+
     while true; do
         read -p "$form_message" yn
         case $yn in
@@ -20,10 +20,10 @@ function question() {
             * ) echo "$form_message";;
         esac
     done
- 
+
     return $answer
 }
- 
+
 function echon {
     if [[ `uname -s` = 'Linux' ]]; then
         echo -n $*
@@ -31,18 +31,18 @@ function echon {
         echo "$*\c"
     fi
 }
- 
+
 function t_cols {
     echo `tput cols`
 }
- 
+
 function t_rows {
     echo `tput lines`
 }
- 
+
 WIDTH=`t_cols`
 HEIGHT=`t_rows`
- 
+
 function center() {
     offset=$1
     msg=$2
@@ -52,7 +52,7 @@ function center() {
     tput cup $pos_h $pos_w
     echon "$msg"
 }
- 
+
 function right() {
     offset=$1
     msg=$2
@@ -62,7 +62,7 @@ function right() {
     tput cup $pos_h $pos_w
     echon "$msg"
 }
- 
+
 function left() {
     offset=$1
     msg=$2
@@ -81,38 +81,38 @@ function showcur() {
     echon "\x1B[?25h"
 }
 
- 
+
 function cstr() {
     ESC="\033[0;"
     color=$1
     message=$2
     echo "${ESC}${color}m${message}${ESC}0m"
 }
- 
+
 function red() {
     echo "`cstr 31 $1`"
 }
- 
+
 function green() {
     echo "`cstr 32 $1`"
 }
- 
+
 function yellow() {
     echo "`cstr 33 $1`"
 }
- 
+
 function blue() {
     echo "`cstr 34 $1`"
 }
- 
+
 function magenta() {
     echo "`cstr 35 $1`"
 }
- 
+
 function cyan() {
     echo "`cstr 36 $1`"
 }
- 
+
 function rep() {
     n=$1
     msg=$2
@@ -123,63 +123,63 @@ function rep() {
     done
     echo "$ret"
 }
- 
+
 function blink_str() {
     s=$1
     m=$2
     msg=$3
     doit=`expr $s / $m`
- 
+
     (( doit = ($s / $m) % 2 ))
-     
+
     ret=""
     if [ $doit -eq 1 ]; then
         ret="$msg"
     fi
     echo "$ret"
 }
- 
+
 function slash_bar {
     p=$1
     m=$2
-     
+
     (( percent = $p % $m ))
     (( len = $WIDTH * $p / 100 ))
- 
+
     msg=`rep $len "-"`
     echo "$msg"
 }
- 
+
 function loading_message() {
     i=$1
-     
+
     (( p = $i % 4 ))
     [ $p -eq 0 ] && car='/'
     [ $p -eq 1 ] && car='-'
     [ $p -eq 2 ] && car='\'
     [ $p -eq 3 ] && car='|'
- 
+
     [ $p -eq 0 ] && load_msg='loading.    '
     [ $p -eq 1 ] && load_msg='loading..   '
     [ $p -eq 2 ] && load_msg='loading...  '
     [ $p -eq 3 ] && load_msg='loading.... '
- 
+
     msg=`printf "$load_msg %s %3d" $car $i`
     echo "$msg%"
 }
- 
+
 function animate() {
     i=0
     limit=200
- 
+
     while true; do
         (( i += 1 ))
         echon "\r"
         clear
- 
+
         (( pos = $i % 100 ))
         (( phase = $i / 100 ))
- 
+
         if [ $phase -eq 0 ]; then
             msg=`loading_message $pos`
             center 0 "$msg"
@@ -191,22 +191,22 @@ function animate() {
             right 1 "$msg"
             left -1 "$msg"
         fi
- 
+
         sleep 0.05
- 
+
         if [ $i -gt $limit ]; then
             echon "\r"
             break;
         fi
     done
- 
+
     echo "done."
 }
- 
+
 ##
 # main
 #
- 
+
 hidecur
 animate
 showcur
